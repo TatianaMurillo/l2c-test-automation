@@ -100,10 +100,10 @@ pending items).
 ## 4. What's still pending
 
 **Phase 1**
-- [ ] Enable Quotes, Orders, Contracts in the org (`salesforce-deployment/docs/enable-lead-to-cash-features.md`).
-- [ ] Deploy via `sf project deploy start` from the repo root, or a Gearset compare & deploy job with its source control connection pointed at the repo root (not a subfolder) - both `salesforce-deployment/force-app` and `apex-tests/force-app` deploy together as one job.
+- [x] Enable Quotes, Orders, Contracts in the org (`salesforce-deployment/docs/enable-lead-to-cash-features.md`).
+- [x] Deploy via Gearset compare & deploy (source control connection pointed at the repo root) - `salesforce-deployment/force-app` and `apex-tests/force-app` deployed together as one job on 2026-08-07. Target org: `yulymurillo87+jqa@agentforce.com`.
+- [x] Run the Apex tests in the org - all 19 passed as part of the Gearset deployment (manual "run only your tests" option, not yet Gearset's automated CI-triggered unit testing - that's still Phase 3).
 - [ ] Replace the generic rule formulas with the org's real business rules.
-- [ ] Run the Apex tests in the org / confirm Gearset's Automated unit testing picks them up.
 
 **Phase 2**
 - [ ] Implement page objects + step definitions for Account, Contact, Address, Opportunity, Quote, Order, Contract, following `automation/src/pages/lead/LeadPage.ts` and `automation/step-definitions/lead.steps.ts`.
