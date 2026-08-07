@@ -9,6 +9,7 @@ private class OrderValidationRulesTest {
     @isTest
     static void activatingOrderWithoutContractThrowsValidationError() {
         Order ord = createDraftOrder();
+        addOrderLineItem(ord);
         ord.Status = ACTIVATED_STATUS;
 
         Test.startTest();
@@ -27,9 +28,12 @@ private class OrderValidationRulesTest {
     @isTest
     static void activatingOrderWithContractSucceeds() {
         Order ord = createDraftOrder();
+        addOrderLineItem(ord);
 
         Contract ctr = new Contract(AccountId = ord.AccountId, StartDate = Date.today());
         insert ctr;
+        ctr.Status = ACTIVATED_STATUS;
+        update ctr;
 
         ord.ContractId = ctr.Id;
         ord.Status = ACTIVATED_STATUS;
@@ -65,5 +69,29 @@ private class OrderValidationRulesTest {
         );
         insert ord;
         return ord;
+    }
+
+    private static void addOrderLineItem(Order ord) {
+        // Salesforce won't activate an Order with zero products, independent
+        // of our own Order_Contract_Required_For_Activation rule - tests that
+        // activate an Order need at least one OrderItem or that system check
+        // fires first and masks whatever this test is actually targeting.
+        Product2 prod = new Product2(Name = 'Test Product', IsActive = true);
+        insert prod;
+
+        PricebookEntry pbe = new PricebookEntry(
+            Pricebook2Id = Test.getStandardPricebookId(),
+            Product2Id = prod.Id,
+            UnitPrice = 100,
+            IsActive = true
+        );
+        insert pbe;
+
+        insert new OrderItem(
+            OrderId = ord.Id,
+            PricebookEntryId = pbe.Id,
+            Quantity = 1,
+            UnitPrice = 100
+        );
     }
 }
