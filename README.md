@@ -26,15 +26,19 @@ copy for every other module once you're ready to automate them.
 
 ## Repo layout at a glance
 
-Three independently deployable/runnable concerns, kept in separate folders:
+Three concerns, kept in separate folders:
 
 - `salesforce-deployment/` - declarative Salesforce metadata (validation
-  rules, fields). Its own `sfdx-project.json`; deploy this folder via
-  Gearset or `sf project deploy start`.
-- `apex-tests/` - paired Apex `@isTest` classes. Also its own
-  `sfdx-project.json`, deployed/run independently of the metadata above.
+  rules, fields).
+- `apex-tests/` - paired Apex `@isTest` classes.
 - `automation/` - the TypeScript + Playwright + Cucumber UI/E2E framework
   (Phase 2). Its own `package.json`; all `npm` commands run from inside it.
+
+`salesforce-deployment/` and `apex-tests/` are declared as `packageDirectories`
+in a single `sfdx-project.json` **at the repo root** - Gearset's Compare and
+deploy (and the `sf` CLI) only recognize one `sfdx-project.json` per repo, and
+it must be at the root, so the two folders deploy together as one SFDX
+project even though they're physically separate.
 
 ## Why this shape (3-phase plan)
 
@@ -71,8 +75,9 @@ l2c-test-automation/
 │   │   ├── support/                # Cucumber World + hooks (session, screenshots)
 │   │   └── utils/testDataFactory.ts # Unique test data generation
 │   └── package.json
-├── apex-tests/                    # Phase 1: paired Apex @isTest classes (own sfdx-project.json)
-├── salesforce-deployment/         # Phase 1: validation rules + fields (own sfdx-project.json)
+├── apex-tests/                    # Phase 1: paired Apex @isTest classes
+├── salesforce-deployment/         # Phase 1: validation rules + fields
+├── sfdx-project.json              # packageDirectories -> both folders above (must stay at repo root)
 ├── docs/gearset-integration.md    # Phase 3: webhook wiring
 └── .github/workflows/             # Runs when Gearset's webhook fires (must stay at repo root)
 ```

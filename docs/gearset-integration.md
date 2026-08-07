@@ -57,8 +57,13 @@ In the repository holding this framework, add these Actions secrets:
 ## 4. Rollout order (matches the 3-phase plan)
 
 1. **Phase 1** - build the org: L2C objects + validation rules
-   (`../salesforce-deployment/`) + paired Apex tests (`../apex-tests/`) -
-   two separate, independently deployable SFDX projects.
+   (`../salesforce-deployment/`) + paired Apex tests (`../apex-tests/`).
+   Both folders are declared as `packageDirectories` in a single
+   `../sfdx-project.json` **at the repo root** - Gearset's Compare and
+   deploy (source control mode) only recognizes one `sfdx-project.json` per
+   repo, and requires it at the root, so point Gearset's source control
+   connection at the repo root, not at either subfolder individually. Both
+   deploy together in one job.
 2. **Phase 2** - build out this framework module by module (Lead is done;
    Account, Contact, Address, Opportunity, Quote, Order, Contract are
    `@wip` templates - implement them the same way as `lead.steps.ts`).

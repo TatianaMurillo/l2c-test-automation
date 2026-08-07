@@ -51,9 +51,12 @@ independently deployable/runnable folders: `salesforce-deployment/` (metadata),
 `apex-tests/` (Apex unit tests), `automation/` (Playwright/Cucumber suite).
 
 ### Phase 1 — `salesforce-deployment/` + `apex-tests/`
-Two deployable SFDX projects (each its own `sfdx-project.json` + `force-app/`),
-kept separate so declarative metadata and Apex test code can be deployed,
-reviewed and owned independently:
+One SFDX project (`sfdx-project.json` at the repo root, with two
+`packageDirectories`), physically split into two folders so declarative
+metadata and Apex test code stay easy to review separately, while still
+deploying together in one Gearset job. (Gearset's Compare and deploy only
+recognizes one `sfdx-project.json` per repo and requires it at the root - a
+per-folder `sfdx-project.json` each was tried first and didn't work.)
 
 - `salesforce-deployment/` — one validation rule (generic, realistic — not
   the org's real business rules yet) per object: Lead, Account (×2, one
@@ -98,7 +101,7 @@ pending items).
 
 **Phase 1**
 - [ ] Enable Quotes, Orders, Contracts in the org (`salesforce-deployment/docs/enable-lead-to-cash-features.md`).
-- [ ] Deploy `salesforce-deployment/force-app` and `apex-tests/force-app` (via `sf project deploy start`, Gearset compare & deploy, or manual Setup entry).
+- [ ] Deploy via `sf project deploy start` from the repo root, or a Gearset compare & deploy job with its source control connection pointed at the repo root (not a subfolder) - both `salesforce-deployment/force-app` and `apex-tests/force-app` deploy together as one job.
 - [ ] Replace the generic rule formulas with the org's real business rules.
 - [ ] Run the Apex tests in the org / confirm Gearset's Automated unit testing picks them up.
 
@@ -121,12 +124,11 @@ l2c-test-automation/
 ├── docs/
 │   ├── project-reference.md         # this file
 │   └── gearset-integration.md       # Phase 3 webhook wiring
+├── sfdx-project.json                # packageDirectories -> the two folders below (must stay at repo root)
 ├── salesforce-deployment/           # Phase 1 — declarative metadata
-│   ├── sfdx-project.json
 │   ├── docs/enable-lead-to-cash-features.md
 │   └── force-app/main/default/objects/
 ├── apex-tests/                      # Phase 1 — paired Apex unit tests
-│   ├── sfdx-project.json
 │   └── force-app/main/default/classes/
 ├── automation/                      # Phase 2 — features/ · step-definitions/ · src/
 └── .github/workflows/               # Phase 3 (must stay at repo root for GitHub Actions)

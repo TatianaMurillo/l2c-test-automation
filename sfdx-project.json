@@ -1,11 +1,14 @@
 {
   "packageDirectories": [
     {
-      "path": "force-app",
+      "path": "salesforce-deployment/force-app",
       "default": true
+    },
+    {
+      "path": "apex-tests/force-app"
     }
   ],
-  "name": "l2c-salesforce-deployment",
+  "name": "l2c-org",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "61.0"

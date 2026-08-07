@@ -5,7 +5,10 @@ This folder is **not a full org** - it is a reference pattern for Phase 1
 Phase 2 (automation) stay in sync from day one.
 
 Declarative metadata only (validation rules, fields). The paired Apex test
-classes live in a separate, independently deployable folder: `../apex-tests/`.
+classes live in a separate folder for clarity: `../apex-tests/`. Both are
+declared as `packageDirectories` in the single `../sfdx-project.json` at the
+repo root (Gearset's Compare and deploy only supports one `sfdx-project.json`
+per repo, and it must be at the root - see `../docs/gearset-integration.md`).
 
 Quote, Order and Contract are disabled by default in a new org - see
 `docs/enable-lead-to-cash-features.md` before deploying those objects' rules.
@@ -28,7 +31,9 @@ one paired Apex test per business constraint).
 
 ## How to use this
 
-1. Create a Salesforce DX project in your own repo: `sf project generate --name l2c-org`.
+1. This repo's SFDX project root is one level up (`../sfdx-project.json`),
+   with `packageDirectories` pointing at both `force-app` here and
+   `../apex-tests/force-app`.
 2. For every validation rule you add declaratively in the org (or as metadata),
    retrieve it into `force-app/main/default/objects/<Object>/validationRules/`
    using the same naming convention as `Lead_Email_Or_Phone_Required.validationRule-meta.xml`.
@@ -36,9 +41,9 @@ one paired Apex test per business constraint).
    `../apex-tests/force-app/main/default/classes/`, following
    `LeadValidationRulesTest.cls`: one `@isTest` method per rule, covering the
    failing case and the passing case(s).
-4. Deploy through Gearset as usual - this folder and `../apex-tests/` are each
-   self-contained SFDX projects (own `sfdx-project.json`), so a Gearset
-   compare & deploy job can point at either independently. Gearset's
+4. Deploy through Gearset as usual - point Compare and deploy's source control
+   connection at the repo root (not this subfolder); both this folder and
+   `../apex-tests/` deploy together in one job. Gearset's
    **Automated unit testing** picks up the Apex tests automatically on each
    CI job - no extra configuration needed beyond enabling the feature on the
    pipeline.
