@@ -2,14 +2,7 @@
 <ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Order_Contract_Required_For_Activation</fullName>
     <active>true</active>
-    <description>
-        Prevents activating an Order with no related Contract, so fulfillment
-        and billing always have a contractual basis to reference. Assumes
-        "Activated" is one of the values configured on the Order.Status
-        picklist in this org (the standard Order object ships editable
-        Status values with no defaults - confirm the exact label used in
-        Setup -> Object Manager -> Order -> Fields -> Status before deploying).
-    </description>
+    <description>Prevents activating an Order with no related Contract. Assumes "Activated" is a value on Order.Status in this org - confirm the exact label in Setup -> Object Manager -> Order -> Fields -> Status before deploying.</description>
     <errorConditionFormula>AND(
     ISPICKVAL(Status, "Activated"),
     ISBLANK(ContractId)
