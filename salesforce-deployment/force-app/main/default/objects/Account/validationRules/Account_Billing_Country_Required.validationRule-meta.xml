@@ -3,6 +3,6 @@
     <fullName>Account_Billing_Country_Required</fullName>
     <active>true</active>
     <description>Blocks saving an Account without a Billing Country. Uses BillingCountryCode (requires State and Country/Territory Picklists enabled). If your org uses free-text country instead, swap for ISBLANK(BillingCountry).</description>
-    <errorConditionFormula>ISBLANK(BillingCountryCode)</errorConditionFormula>
+    <errorConditionFormula>ISPICKVAL(BillingCountryCode, "")</errorConditionFormula>
     <errorMessage>Billing Country is required.</errorMessage>
 </ValidationRule>

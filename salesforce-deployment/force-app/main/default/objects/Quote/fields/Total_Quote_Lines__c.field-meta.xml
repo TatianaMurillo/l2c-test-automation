@@ -5,7 +5,6 @@
     <label>Total Quote Lines</label>
     <description>Roll-up count of QuoteLineItem child records, used by Quote_LineItem_Required_For_Approval to enforce that a Quote has at least one line item before it can be approved.</description>
     <required>false</required>
-    <summarizedField>QuoteLineItem.Id</summarizedField>
     <summaryForeignKey>QuoteLineItem.QuoteId</summaryForeignKey>
     <summaryOperation>count</summaryOperation>
     <type>Summary</type>
