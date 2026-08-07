@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Account_Required</fullName>
+    <active>true</active>
+    <description>Blocks saving a Contact with no related Account, since every downstream Lead-to-Cash record (Opportunity Contact Role, Quote, Contract signatory) assumes the Contact belongs to an Account.</description>
+    <errorConditionFormula>ISBLANK(AccountId)</errorConditionFormula>
+    <errorMessage>Account is required.</errorMessage>
+</ValidationRule>

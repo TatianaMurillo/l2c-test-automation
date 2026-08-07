@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Billing_Country_Required</fullName>
+    <active>true</active>
+    <description>Blocks saving an Account without a Billing Country, so downstream tax, shipping and CPQ logic always has a country to key off. Uses BillingCountryCode, which requires State and Country/Territory Picklists to be enabled (Setup -> State and Country/Territory Picklists). If your org still uses free-text country, swap this for ISBLANK(BillingCountry) instead.</description>
+    <errorConditionFormula>ISBLANK(BillingCountryCode)</errorConditionFormula>
+    <errorMessage>Billing Country is required.</errorMessage>
+</ValidationRule>

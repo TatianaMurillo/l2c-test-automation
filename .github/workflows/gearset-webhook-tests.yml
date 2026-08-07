@@ -1,0 +1,69 @@
+name: L2C UI regression suite (triggered by Gearset)
+
+# This workflow is NOT triggered by pushes to this repo. It is triggered
+# remotely by a Gearset outgoing webhook, fired after a successful
+# deployment on a CI job. See ../../docs/gearset-integration.md for the
+# webhook configuration on the Gearset side.
+#
+# The automation framework (TypeScript + Playwright + Cucumber) lives in
+# automation/, a separate folder from the Salesforce metadata (apex-tests/,
+# salesforce-deployment/) - all npm steps below run with
+# working-directory: automation.
+on:
+  repository_dispatch:
+    types: [gearset-deployment-succeeded]
+  # Also runnable manually for local debugging of the pipeline itself.
+  workflow_dispatch:
+    inputs:
+      target_org_alias:
+        description: 'Org alias the suite should run against'
+        required: true
+        default: 'qa-l2c'
+
+jobs:
+  run-l2c-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout automation framework
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: automation/package-lock.json
+
+      - name: Install dependencies
+        working-directory: automation
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: automation
+        run: npm run install:browsers
+
+      - name: Run smoke suite against the org Gearset just deployed to
+        working-directory: automation
+        env:
+          SF_LOGIN_URL: ${{ secrets.SF_LOGIN_URL }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_SECURITY_TOKEN: ${{ secrets.SF_SECURITY_TOKEN }}
+          HEADLESS: 'true'
+        run: npm run test:smoke
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-report
+          path: automation/reports/cucumber-report.json
+          retention-days: 14
+
+      - name: Report result back to Gearset
+        if: always()
+        run: |
+          curl -X POST "${{ secrets.GEARSET_RESULTS_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"status\": \"${{ job.status }}\", \"runUrl\": \"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"

@@ -1,0 +1,36 @@
+{
+  "name": "l2c-test-automation",
+  "version": "0.1.0",
+  "description": "Modular Playwright + Cucumber + TypeScript automation framework for Salesforce Lead-to-Cash validation rule and end-to-end testing, designed to be triggered from a Gearset CI/CD pipeline.",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "cucumber-js",
+    "test:lead": "cucumber-js --tags @lead",
+    "test:smoke": "cucumber-js --tags @smoke",
+    "test:validation-rules": "cucumber-js --tags @validation-rule",
+    "test:gearset": "cucumber-js --tags @smoke --format json:reports/cucumber-report.json --format @cucumber/pretty-formatter",
+    "report:html": "node ./src/utils/generateHtmlReport.js",
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "install:browsers": "playwright install --with-deps chromium"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.9.0",
+    "@cucumber/pretty-formatter": "^1.0.1",
+    "@playwright/test": "^1.47.0",
+    "@types/node": "^20.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "eslint": "^8.57.0",
+    "multiple-cucumber-html-reporter": "^3.7.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

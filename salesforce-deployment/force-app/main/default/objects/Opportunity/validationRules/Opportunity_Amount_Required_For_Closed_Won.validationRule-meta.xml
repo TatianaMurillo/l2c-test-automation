@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Opportunity_Amount_Required_For_Closed_Won</fullName>
+    <active>true</active>
+    <description>Prevents marking an Opportunity as Closed Won with a zero or blank Amount, which would corrupt revenue forecasting and downstream Quote/Order totals.</description>
+    <errorConditionFormula>AND(
+    ISPICKVAL(StageName, "Closed Won"),
+    OR(ISBLANK(Amount), Amount &lt;= 0)
+)</errorConditionFormula>
+    <errorMessage>Amount must be greater than zero to close a deal as won.</errorMessage>
+</ValidationRule>

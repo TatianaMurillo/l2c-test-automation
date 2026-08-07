@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contract_Start_Date_Required</fullName>
+    <active>true</active>
+    <description>Blocks saving a Contract without a Start Date, since Contract Term and end-date calculations depend on it.</description>
+    <errorConditionFormula>ISBLANK(StartDate)</errorConditionFormula>
+    <errorMessage>Contract Start Date is required.</errorMessage>
+</ValidationRule>

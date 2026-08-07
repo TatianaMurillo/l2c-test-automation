@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lead_Email_Or_Phone_Required</fullName>
+    <active>true</active>
+    <description>Blocks saving a Lead unless at least an Email or a Phone number is captured, so Sales can always follow up.</description>
+    <errorConditionFormula>AND(ISBLANK(Email), ISBLANK(Phone))</errorConditionFormula>
+    <errorMessage>Email or Phone is required before this Lead can be saved.</errorMessage>
+</ValidationRule>
